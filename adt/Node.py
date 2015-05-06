@@ -1,8 +1,8 @@
 class Node():
     def __init__(self, item=None, nxt=None, prev=None):
         self.__data = item
-        self.__next = nxt
-        self.__prev = prev
+        self.__right = nxt
+        self.__left = prev
 
         self.__parent = None
 
@@ -14,11 +14,11 @@ class Node():
         return self.__parent
 
     def remove_child(self, node):
-        if self.next() == node:
-            self.set_next(None)
+        if self.right() == node:
+            self.set_right(None)
             return True
-        if self.prev() == node:
-            self.set_prev(None)
+        if self.left() == node:
+            self.set_left(None)
             return True
         return False
 
@@ -29,23 +29,23 @@ class Node():
     def set_data(self, data):
         self.__data = data
 
-    def next(self):
-        return self.__next
+    def right(self):
+        return self.__right
 
-    def prev(self):
-        return self.__prev
+    def left(self):
+        return self.__left
 
-    def set_next(self, nxt):
-        self.__next = nxt
+    def set_right(self, nxt):
+        self.__right = nxt
 
-    def set_prev(self, prev):
-        self.__prev = prev
+    def set_left(self, prev):
+        self.__left = prev
 
     def __str__(self):
         res = "[Node: " + str(self.get_data())
-        if self.prev():
-            res += "\t| prev: " + str(self.prev().get_data())
-        if self.next():
-            res += "\t| next: " + str(self.next().get_data())
+        if self.left():
+            res += "\t| prev: " + str(self.left().get_data())
+        if self.right():
+            res += "\t| next: " + str(self.right().get_data())
         res += "]"
         return res

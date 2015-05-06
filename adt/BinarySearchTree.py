@@ -21,20 +21,20 @@ class BinarySearchTree(object):
                 probe.set_prev(Node(item))
                 probe.prev().set_parent(probe)
                 return
-            if probe.next() is None and item > probe.get_data():
+            if probe.left() is None and item > probe.get_data():
                 probe.set_next(Node(item))
-                probe.next().set_parent(probe)
+                probe.left().set_parent(probe)
                 return
 
             # Traversal
             if item > probe.get_data():
-                probe = probe.next()
+                probe = probe.left()
             if item < probe.get_data():
                 probe = probe.prev()
 
 
     def remove(self, node):
-            if node.next() is None and node.prev() is None:
+            if node.left() is None and node.prev() is None:
                 node.parent.remove_child(node)
 
             # TODO Finish remove from tree
@@ -55,7 +55,7 @@ class BinarySearchTree(object):
         elif item < node.get_data() and node.prev() is None:
             return self.contains(node.prev, item)
 
-        elif item > node.get_data() and node.next() is None:
+        elif item > node.get_data() and node.left() is None:
             return self.contins(node.right, item)
 
         return False
@@ -65,7 +65,7 @@ class BinarySearchTree(object):
             return "[Empty Tree]"
         node = self._root
 
-        res = str(node) + self._get_str(node.prev()) + self._get_str(node.next())
+        res = str(node) + self._get_str(node.prev()) + self._get_str(node.left())
         return res
 
 
