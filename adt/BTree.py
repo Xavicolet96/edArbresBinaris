@@ -42,24 +42,23 @@ class BTree(object):
             # TODO Finish remove from tree
             pass
 
-    def contains(self, item, node=None):
-        """ Recursive function that returns True if the tree contains the given item. """
-        if self._root is None:
+    def contains(self, word):
+        probe = self._root
+        if probe is None:
             return False
 
-        if node is None:
-            node = self._root
+        while probe:
+            if word == probe.get_word():
+                return probe
 
-        if node.get_word() == item:
-            return node
+            if word < probe.get_word():
+                probe = probe.left()
+                continue
 
-        elif item < node.get_word() and node.left() is None:
-            return self.contains(item, node.left())
-
-        elif item > node.get_word() and node.right() is None:
-            return self.contains(item, node.right())
-
+            if word > probe.get_word():
+                probe = probe.right()
         return False
+
 
     def find_pos_for_word(self, word):
         """ Returns the node where the word would go. If the node is not found it creates a new one
@@ -106,13 +105,12 @@ class BTree(object):
 
     @staticmethod
     def test():
-        tree = BinarySearchTree()
+        tree = BTree()
         tree.insert("H")
         tree.insert("A")
         tree.insert("Z")
         print tree.contains("Hello")
-
-        print tree
+        print tree.contains("A")
 
 if __name__ == "__main__":
     BTree.test()

@@ -12,13 +12,22 @@ class BTreeWordFinder:
     def main(self):
         self.append_text("smallText.txt")
 
+        # print self._tree.contains("aheeeee")
+
+        t0 = clock()
+
         f = open("dictionary.txt", "r")
         for line in f:
             for word in line.split():
-                arr = self.find_ocurrences(word.lower())
-                if arr:
-                    print word.lower(), ": posicions: ", arr
+                node = self._tree.contains(word.lower())
+                if node is not False:
+                    print node.get_word(), "\tpos: ", node.array()
         f.close()
+
+        t1 = clock()
+
+        print t1-t0
+
 
 
 
@@ -50,15 +59,10 @@ class BTreeWordFinder:
         return self._tree
 
     def find_ocurrences(self, word):
-        node = self._tree.find_pos_for_word(word)
-        arr = node.array()
-        if len(arr) == 0:
-            if node.parent():
-                node.parent().remove_child(node)
-            return None
-        else:
-            print "found ", word
-            return node.array()
+        node = self._tree.contains(word)
+        if node is not False:
+            return node
+        return None
 
 
     def view_index(self):
