@@ -16,7 +16,7 @@ class BTreeWordFinder:
         for line in f:
             for word in line.split():
                 arr = self.find_ocurrences(word.lower())
-                if arr is not False:
+                if arr:
                     print word.lower(), ": posicions: ", arr
         f.close()
 
@@ -52,9 +52,9 @@ class BTreeWordFinder:
     def find_ocurrences(self, word):
         node = self._tree.find_pos_for_word(word)
         arr = node.array()
-        print arr
-        if len(arr) <= 0:
-            node.parent().remove_child(node)
+        if len(arr) == 0:
+            if node.parent():
+                node.parent().remove_child(node)
             return None
         else:
             print "found ", word
