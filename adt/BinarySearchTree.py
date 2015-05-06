@@ -17,24 +17,23 @@ class BinarySearchTree(object):
                 return
 
             # Insertion
-            if probe.prev() is None and item < probe.get_data():
-                probe.set_prev(Node(item))
-                probe.prev().set_parent(probe)
-                return
-            if probe.left() is None and item > probe.get_data():
-                probe.set_next(Node(item))
+            if probe.left() is None and item < probe.get_data():
+                probe.set_right(Node(item))
                 probe.left().set_parent(probe)
+                return
+            if probe.right() is None and item > probe.get_data():
+                probe.set_right(Node(item))
+                probe.right().set_parent(probe)
                 return
 
             # Traversal
             if item > probe.get_data():
-                probe = probe.left()
+                probe = probe.right()
             if item < probe.get_data():
-                probe = probe.prev()
-
+                probe = probe.left()
 
     def remove(self, node):
-            if node.left() is None and node.prev() is None:
+            if node.right() is None and node.left() is None:
                 node.parent.remove_child(node)
 
             # TODO Finish remove from tree
@@ -52,20 +51,20 @@ class BinarySearchTree(object):
         if node.get_data() == item:
             return True
 
-        elif item < node.get_data() and node.prev() is None:
-            return self.contains(node.prev, item)
+        elif item < node.get_data() and node.left() is None:
+            return self.contains(node.left, item)
 
-        elif item > node.get_data() and node.left() is None:
+        elif item > node.get_data() and node.right() is None:
             return self.contins(node.right, item)
 
         return False
 
     def __str__(self):
-        if self._root == None:
+        if self._root is None:
             return "[Empty Tree]"
         node = self._root
 
-        res = str(node) + self._get_str(node.prev()) + self._get_str(node.left())
+        res = str(node) + self._get_str(node.left()) + self._get_str(node.right())
         return res
 
 
