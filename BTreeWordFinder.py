@@ -28,9 +28,6 @@ class BTreeWordFinder:
 
         print t1-t0
 
-
-
-
     def append_text(self, filename):
         line_n = 0
         pos = 0
