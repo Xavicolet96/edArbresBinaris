@@ -2,7 +2,7 @@ __author__ = 'Akira'
 
 from Node import *
 
-class BinarySearchTree(object):
+class BTree(object):
 
     def __init__(self):
         self._root = None
