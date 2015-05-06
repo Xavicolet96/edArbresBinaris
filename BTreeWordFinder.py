@@ -12,6 +12,15 @@ class BTreeWordFinder:
     def main(self):
         self.append_text("smallText.txt")
 
+        f = open("dictionary.txt", "r")
+        for line in f:
+            for word in line.split():
+                arr = self.find_ocurrences(word.lower())
+                if arr is not False:
+                    print word.lower(), ": posicions: ", arr
+        f.close()
+
+
 
     def append_text(self, filename):
         line_n = 0
@@ -28,6 +37,7 @@ class BTreeWordFinder:
                     self.insert_word(word.lower(), line_n, pos)
                     pos += 1
                 line_n += 1
+            f.close()
 
     def insert_word(self, word, line, pos):
         #print "'%s' \t\t line: %s pos: %s" % (word, line, pos)
@@ -40,12 +50,15 @@ class BTreeWordFinder:
         return self._tree
 
     def find_ocurrences(self, word):
-        node = self._tree.find_pos_for_word()
-
+        node = self._tree.find_pos_for_word(word)
         arr = node.array()
-        if arr is []:
-            node.parent().remove(node)
-            print "word is non existant"
+        print arr
+        if len(arr) <= 0:
+            node.parent().remove_child(node)
+            return None
+        else:
+            print "found ", word
+            return node.array()
 
 
     def view_index(self):
