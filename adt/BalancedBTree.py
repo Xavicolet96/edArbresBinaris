@@ -2,12 +2,37 @@ __author__ = 'Akira'
 
 from Node import *
 
-class BTree(object):
+class BalancedBTree(object):
 
     def __init__(self):
         self._root = None
 
-    def insert(self, word, tup=None):
+    # TODO Finish insert method for BalancedTree
+    def insert(self, node, word, tup = None):
+        if node.get_word() is word:
+            # data already in tree
+            return
+
+        # TRAVERSING TREE TO FIND NODE
+        if word < node.get_word():
+            # add as left child
+            if node.left is None:
+                # node.set_left(toInsert)
+                pass
+            else:
+                # insert(node.left, toInsert)
+                update_bal(node.left())
+
+        elif node.right is None:
+                pass
+                # add as right child
+                # node.addRight(toInsert)
+        else:
+            self.insert(node.right,	word, tup)
+            update_bal(node.right())
+
+    def old_insert(self, word, tup=None):
+        # TODO Rotate functions to keep the tree balanced
         probe = self._root
         while True:
             if probe is None:
@@ -33,13 +58,6 @@ class BTree(object):
                 probe = probe.right()
             if word <= probe.get_word():
                 probe = probe.left()
-
-    def remove(self, node):
-            if node.right() is None and node.left() is None:
-                node.parent.remove_child(node)
-
-            # TODO Finish remove from tree
-            pass
 
     def contains(self, word):
         probe = self._root
@@ -104,12 +122,16 @@ class BTree(object):
 
     @staticmethod
     def test():
-        tree = BTree()
+        tree = BalancedBTree()
         tree.insert("H")
         tree.insert("A")
         tree.insert("Z")
         print tree.contains("Hello")
         print tree.contains("A")
 
+# TODO Create update_bal function for BalanedBTREE
+def update_bal(node):
+        pass
+
 if __name__ == "__main__":
-    BTree.test()
+    BalancedBTree.test()
