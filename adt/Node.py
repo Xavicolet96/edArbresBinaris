@@ -1,9 +1,11 @@
+from WordData import *
+
 class Node():
-    def __init__(self, word=None, left=None, right=None):
-        self.__word = word
-        self.__array = []
+    def __init__(self, data=None, left=None, right=None):
+
         self.__right = left
         self.__left = right
+        self.__data = data
 
         self.__parent = None
 
@@ -24,17 +26,11 @@ class Node():
         return False
 
     """ Linked lists Functions (Also used for BTs) """
-    def set_word(self, word):
-        self.__word = word
+    def set_data(self, data):
+        self.__data = data
 
-    def get_word(self):
-        return self.__word
-
-    def array(self):
-        return self.__array
-
-    def add_tuple(self, tup):
-        self.__array += [tup]
+    def get_data(self):
+        return self.__data
 
     def right(self):
         return self.__right
@@ -47,15 +43,3 @@ class Node():
 
     def set_left(self, prev):
         self.__left = prev
-
-    def __cmp__(self, other):
-        return cmp(self.get_word(), other.get_word())
-
-    def __str__(self):
-        res = "[Node: " + str(self.get_word())
-        if self.left():
-            res += "\t| prev: " + str(self.left().get_word())
-        if self.right():
-            res += "\t| next: " + str(self.right().get_word())
-        res += "]"
-        return res
