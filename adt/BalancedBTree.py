@@ -8,27 +8,27 @@ class BalancedBTree(object):
         self._root = None
 
     # TODO Finish insert method for BalancedTree
-    def insert(self, node, word, tup = None):
-        if node.get_word() is word:
+    def insert(self, node, data):
+        if data is node.get_data():
             # data already in tree
             return
 
         # TRAVERSING TREE TO FIND NODE
-        if word < node.get_word():
+        if data < node.get_data():
             # add as left child
-            if node.left is None:
+            if node.left() is None:
                 # node.set_left(toInsert)
                 pass
             else:
                 # insert(node.left, toInsert)
                 update_bal(node.left())
 
-        elif node.right is None:
+        elif node.right() is None:
                 pass
                 # add as right child
                 # node.addRight(toInsert)
         else:
-            self.insert(node.right,	word, tup)
+            self.insert(node.right(), data)
             update_bal(node.right())
 
     def old_insert(self, word, tup=None):
