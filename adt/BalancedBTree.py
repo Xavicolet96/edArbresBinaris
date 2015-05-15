@@ -54,22 +54,22 @@ class BalancedBTree(object):
 
         # If the node has a parent, keep going
         if node.parent():
-            BalancedBTree.update_bal(node.parent(), h+1)
+            BalancedBTree.update_bal(node.parent(), h + 1)
 
-    def contains(self, word):
+    def contains(self, data):
         probe = self._root
         if probe is None:
             return False
 
         while probe:
-            if word == probe.get_word():
+            if data == probe.get_data():
                 return probe
 
-            if word < probe.get_word():
+            if data < probe.get_data():
                 probe = probe.left()
                 continue
 
-            if word > probe.get_word():
+            if data > probe.get_data():
                 probe = probe.right()
         return False
 
@@ -117,8 +117,49 @@ class BalancedBTree(object):
             print node
             self.in_order(node.right())
 
-    @staticmethod
-    def rotate(E, C):
+    def rotate(self, E, C):
+        root = None
+        if E.parent():
+            root = E.parent()
+
+        if C is E.left():
+            E.set_left(None)
+        else:
+            E.set_right(None)
+        C.set_parent(None)
+
+        if C.left() and C.left().get_height() == 0:
+            C.left().set_parent(E)
+            E.set_right(C.left())
+            C.set_left(None)
+        else:
+            C.right().set_parent(E)
+            E.set_left(C.right())
+            C.set_right(None)
+
+        # Node arrel
+        E.set_parent(C)
+        if C.left() is None:
+            C.set_left(E)
+        else:
+            C.set_right(E)
+
+        # Arreglar Root
+        if root:
+            C.set_parent(root)
+            if root.left() is E:
+                root.set_left(C)
+            else:
+                root.set_right(C)
+        if E is self._root:
+            self._root = C
+
+        self.refresh_tree()
+
+    def refresh_tree(self):
+        """ call update_bal on all leave """
+        leaves = []
+
         pass
 
     @staticmethod
@@ -131,6 +172,23 @@ class BalancedBTree(object):
         tree.insert("D")
         tree.insert("A")
 
+        nodes = []
+        c = ord("A")
+        for n in range(6):
+            nodes += [tree.contains(chr(c+n))]
+
+        tree.print_tree()
+
+        E = tree.contains("E")
+        C = tree.contains("C")
+
+        tree.rotate(E, C)
+
+        print "\nNode by node"
+        for node in nodes:
+            print node
+
+        print "\nFinal tree:"
         tree.print_tree()
 
 

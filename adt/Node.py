@@ -11,11 +11,14 @@ class Node(object):
     def __str__(self):
         lft = ""
         rght = ""
+        prt = ""
         if self.left():
             lft = self.left().get_data()
         if self.right():
             rght = self.right().get_data()
-        return "D:%8s | (L:%s)(R:%s) | H:%d B:%d" % (str(self.__data), lft, rght, self._height, self._balance)
+        if self.parent():
+            prt = self.parent().get_data()
+        return "D:%8s | (P:%s)(L:%s)(R:%s) | H:%d B:%d" % (str(self.__data), prt, lft, rght, self._height, self._balance)
 
     """ Binary Tree Functions """
     def set_parent(self, node):
