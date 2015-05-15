@@ -38,12 +38,17 @@ class BalancedBTree(object):
     @staticmethod
     def update_bal(node, h=0):
         # Set the height
+        # TODO si no existeix node fill es posa -1
         node.set_height(h)
         bal = 0
         if node.left():
             bal += node.left().get_height()
+        else :
+            bal -=1
         if node.right():
             bal -= node.right().get_height()
+        else :
+            bal-=1
         node.set_balance(bal)
 
         # If the node has a parent, keep going

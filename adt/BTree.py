@@ -102,6 +102,8 @@ class BTree(object):
             print(node.get_word(), node.array())
             self.in_order(node.right())
 
+
+
     @staticmethod
     def test():
         tree = BTree()

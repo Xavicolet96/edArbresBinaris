@@ -61,6 +61,10 @@ class BTreeWordFinder:
     def view_index(self):
         self._tree.print_tree()
 
+                # TODO calcular a profunditat de l'arbre
+    def prof (self):
+        pass
+
 
 def main():
     finder = BTreeWordFinder()
