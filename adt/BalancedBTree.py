@@ -43,12 +43,13 @@ class BalancedBTree(object):
         bal = 0
         if node.left():
             bal += node.left().get_height()
-        else :
-            bal -=1
+        else:
+            bal += 1
+
         if node.right():
             bal -= node.right().get_height()
-        else :
-            bal-=1
+        else:
+            bal -= 1
         node.set_balance(bal)
 
         # If the node has a parent, keep going
@@ -117,13 +118,18 @@ class BalancedBTree(object):
             self.in_order(node.right())
 
     @staticmethod
+    def rotate(E, C):
+        pass
+
+    @staticmethod
     def test():
         tree = BalancedBTree()
-        tree.insert(3)
-        tree.insert(2)
-        tree.insert(1)
-        tree.insert(4)
-        tree.insert(5)
+        tree.insert("E")
+        tree.insert("C")
+        tree.insert("F")
+        tree.insert("B")
+        tree.insert("D")
+        tree.insert("A")
 
         tree.print_tree()
 
