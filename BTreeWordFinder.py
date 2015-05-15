@@ -4,29 +4,25 @@ from adt.BTree import *
 import re
 from time import clock
 
-class BTreeWordFinder:
 
+class BTreeWordFinder:
     def __init__(self):
         self._tree = BTree()
 
     def main(self):
         self.append_text("smallText.txt")
 
-        # print self._tree.contains("aheeeee")
-
         t0 = clock()
-
         f = open("dictionary.txt", "r")
         for line in f:
             for word in line.split():
                 node = self._tree.contains(word.lower())
                 if node is not False:
-                    print node.get_word(), "\tpos: ", node.array()
+                    print "%16s (%2d) pos: %s" % (node.get_word(), len(node.array()), node.array())
         f.close()
-
         t1 = clock()
 
-        print t1-t0
+        print "\nTime: %.2fs" % (t1 - t0)
 
     def append_text(self, filename):
         line_n = 0
@@ -46,7 +42,7 @@ class BTreeWordFinder:
             f.close()
 
     def insert_word(self, word, line, pos):
-        #print "'%s' \t\t line: %s pos: %s" % (word, line, pos)
+        # print "'%s' \t\t line: %s pos: %s" % (word, line, pos)
         tup = (line, pos)
 
         node = self._tree.find_pos_for_word(word)
@@ -69,6 +65,7 @@ class BTreeWordFinder:
 def main():
     finder = BTreeWordFinder()
     finder.main()
+
 
 if __name__ == "__main__":
     main()

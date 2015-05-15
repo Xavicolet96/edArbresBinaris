@@ -1,20 +1,40 @@
-from WordData import *
-
-class Node():
+class Node(object):
     def __init__(self, data=None, left=None, right=None):
-
         self.__right = left
         self.__left = right
         self.__data = data
 
-        self.__parent = None
+        self._height = 0
+        self._balance = 0
+        self._parent = None
+
+    def __str__(self):
+        lft = ""
+        rght = ""
+        if self.left():
+            lft = self.left().get_data()
+        if self.right():
+            rght = self.right().get_data()
+        return "D:%8s | (L:%s)(R:%s) | H:%d B:%d" % (str(self.__data), lft, rght, self._height, self._balance)
 
     """ Binary Tree Functions """
     def set_parent(self, node):
-        self.__parent = node;
+        self._parent = node
 
     def parent(self):
-        return self.__parent
+        return self._parent
+
+    def get_height(self):
+        return self._height
+
+    def set_height(self, h):
+        self._height = h
+
+    def get_balance(self):
+        return self._balance
+
+    def set_balance(self, b):
+        self._balance = b
 
     def remove_child(self, node):
         if self.right() == node:
@@ -25,7 +45,6 @@ class Node():
             return True
         return False
 
-    """ Linked lists Functions (Also used for BTs) """
     def set_data(self, data):
         self.__data = data
 

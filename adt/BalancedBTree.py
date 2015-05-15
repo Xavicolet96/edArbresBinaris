@@ -1,63 +1,54 @@
-__author__ = 'Akira'
-
 from Node import *
 
-class BalancedBTree(object):
 
+class BalancedBTree(object):
     def __init__(self):
         self._root = None
 
-    # TODO Finish insert method for BalancedTree
-    def insert(self, node, data):
+    def insert(self, data, node=None):
+        if self._root is None:
+            self._root = Node(data)
+            return
+        elif node is None:
+            node = self._root
+
         if data is node.get_data():
-            # data already in tree
+            node.get_data().merge(data)
             return
 
-        # TRAVERSING TREE TO FIND NODE
+        # TRAVERSING TREE TO FIND PLACE
+        # LEFT SIDE
         if data < node.get_data():
             # add as left child
             if node.left() is None:
-                # node.set_left(toInsert)
-                pass
+                node.set_left(Node(data))
+                node.left().set_parent(node)
+                BalancedBTree.update_bal(node.left())
             else:
-                # insert(node.left, toInsert)
-                update_bal(node.left())
-
-        elif node.right() is None:
-                pass
-                # add as right child
-                # node.addRight(toInsert)
+                self.insert(data, node.left())
+        # RIGHT SIDE
         else:
-            self.insert(node.right(), data)
-            update_bal(node.right())
+            if node.right() is None:
+                node.set_right(Node(data))
+                node.right().set_parent(node)
+                BalancedBTree.update_bal(node.right())
+            else:
+                self.insert(data, node.right())
 
-    def old_insert(self, word, tup=None):
-        # TODO Rotate functions to keep the tree balanced
-        probe = self._root
-        while True:
-            if probe is None:
-                self._root = Node(word)
-                self._root.add_tuple(tup)
-                return
+    @staticmethod
+    def update_bal(node, h=0):
+        # Set the height
+        node.set_height(h)
+        bal = 0
+        if node.left():
+            bal += node.left().get_height()
+        if node.right():
+            bal -= node.right().get_height()
+        node.set_balance(bal)
 
-            # Insertion
-            if probe.left() is None and word < probe.get_word():
-                probe.set_right(Node(word))
-                probe.add_tuple(tup)
-                probe.left().set_parent(probe)
-                return
-
-            if probe.right() is None and word > probe.get_word():
-                probe.set_right(Node(word))
-                probe.add_tuple(tup)
-                probe.right().set_parent(probe)
-                return
-
-            # Traversal
-            if word > probe.get_word():
-                probe = probe.right()
-            if word <= probe.get_word():
-                probe = probe.left()
+        # If the node has a parent, keep going
+        if node.parent():
+            BalancedBTree.update_bal(node.parent(), h+1)
 
     def contains(self, word):
         probe = self._root
@@ -86,7 +77,7 @@ class BalancedBTree(object):
             self._root = Node(word)
             return self._root
 
-        while probe is not None:
+        while probe:
 
             if word < probe.get_word():
                 if probe.left() is None:
@@ -117,21 +108,20 @@ class BalancedBTree(object):
     def in_order(self, node):
         if node:
             self.in_order(node.left())
-            print(node.get_word(), node.array())
+            print node
             self.in_order(node.right())
 
     @staticmethod
     def test():
         tree = BalancedBTree()
-        tree.insert("H")
-        tree.insert("A")
-        tree.insert("Z")
-        print tree.contains("Hello")
-        print tree.contains("A")
+        tree.insert(3)
+        tree.insert(2)
+        tree.insert(1)
+        tree.insert(4)
+        tree.insert(5)
 
-# TODO Create update_bal function for BalanedBTREE
-def update_bal(node):
-        pass
+        tree.print_tree()
+
 
 if __name__ == "__main__":
     BalancedBTree.test()

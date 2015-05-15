@@ -1,6 +1,6 @@
 __author__ = 'Akira'
 
-from Node import *
+from WordNode import *
 
 class BTree(object):
 
@@ -11,19 +11,19 @@ class BTree(object):
         probe = self._root
         while True:
             if probe is None:
-                self._root = Node(word)
+                self._root = WordNode(word)
                 self._root.add_tuple(tup)
                 return
 
             # Insertion
             if probe.left() is None and word < probe.get_word():
-                probe.set_right(Node(word))
+                probe.set_left(WordNode(word))
                 probe.add_tuple(tup)
                 probe.left().set_parent(probe)
                 return
 
             if probe.right() is None and word > probe.get_word():
-                probe.set_right(Node(word))
+                probe.set_right(WordNode(word))
                 probe.add_tuple(tup)
                 probe.right().set_parent(probe)
                 return
@@ -65,14 +65,14 @@ class BTree(object):
         probe = self._root
 
         if probe is None:
-            self._root = Node(word)
+            self._root = WordNode(word)
             return self._root
 
         while probe is not None:
 
             if word < probe.get_word():
                 if probe.left() is None:
-                    new_node = Node(word)
+                    new_node = WordNode(word)
                     new_node.set_parent(probe)
                     probe.set_left(new_node)
                     return new_node
@@ -82,7 +82,7 @@ class BTree(object):
 
             if word > probe.get_word():
                 if probe.right() is None:
-                    new_node = Node(word)
+                    new_node = WordNode(word)
                     new_node.set_parent(probe)
                     probe.set_right(new_node)
                     return new_node
@@ -106,7 +106,7 @@ class BTree(object):
     def test():
         tree = BTree()
         tree.insert("H")
-        tree.insert("A")
+        tree.insert("A", (5, 1))
         tree.insert("Z")
         print tree.contains("Hello")
         print tree.contains("A")

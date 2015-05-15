@@ -13,10 +13,18 @@ class WordData(object):
         return self._word
 
     def add_pos(self, pos):
-        self._positions += pos
+        self._positions += [pos]
 
     def get_pos(self):
         return self._positions
+
+    def merge(self, other):
+        """ Merges this WordData with another wordData, adding the positions to this data's list """
+        if self._word is not other.get_word():
+            return
+
+        for pos in other.get_pos():
+            self.add_pos(pos)
 
     def __cmp__(self, other):
         return cmp(self._word, other.get_word())
