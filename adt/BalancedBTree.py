@@ -5,6 +5,9 @@ class BalancedBTree(object):
     def __init__(self):
         self._root = None
 
+    def get_root(self):
+        return self._root
+
     def insert(self, data, node=None):
         if self._root is None:
             self._root = Node(data)
@@ -24,6 +27,7 @@ class BalancedBTree(object):
                 node.set_left(Node(data))
                 node.left().set_parent(node)
                 BalancedBTree.update_bal(node.left())
+
             else:
                 self.insert(data, node.left())
         # RIGHT SIDE
@@ -118,6 +122,8 @@ class BalancedBTree(object):
             self.in_order(node.right())
 
     def rotate(self, E, C):
+        print "rotating: (%s) by (%s)" % (E.get_data(), C.get_data())
+
         root = None
         if E.parent():
             root = E.parent()
@@ -154,13 +160,20 @@ class BalancedBTree(object):
         if E is self._root:
             self._root = C
 
-        self.refresh_tree()
+        self.refresh_tree(self._root)
 
-    def refresh_tree(self):
-        """ call update_bal on all leave """
-        leaves = []
+    def balance_tree(self):
 
-        pass
+
+    @staticmethod
+    def refresh_tree(node):
+        """ call update_bal on all leaves """
+        if node.left():
+            BalancedBTree.refresh_tree(node.left())
+        if node.right():
+            BalancedBTree.refresh_tree(node.right())
+        if not node.left() and not node.right():
+            BalancedBTree.update_bal(node)
 
     @staticmethod
     def test():
@@ -182,13 +195,9 @@ class BalancedBTree(object):
         E = tree.contains("E")
         C = tree.contains("C")
 
-        tree.rotate(E, C)
-
-        print "\nNode by node"
-        for node in nodes:
-            print node
 
         print "\nFinal tree:"
+        #BalancedBTree.refresh_tree(tree.get_root())
         tree.print_tree()
 
 
