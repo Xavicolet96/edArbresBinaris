@@ -1,1 +1,1 @@
-__author__ = 'Akira'
+__author__ = ''

@@ -18,7 +18,7 @@ class Node(object):
             rght = self.right().get_data()
         if self.parent():
             prt = self.parent().get_data()
-        return "D:%8s | (P:%s)(L:%s)(R:%s) | H:%d B:%d" % (str(self.__data), prt, lft, rght, self._height, self._balance)
+        return "%6s | (P:%2s)(L:%2s)(R:%2s) | H:%2d B:%2d" % (str(self.__data), prt, lft, rght, self._height, self._balance)
 
     """ Binary Tree Functions """
     def set_parent(self, node):
