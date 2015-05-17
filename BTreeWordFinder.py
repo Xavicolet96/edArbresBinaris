@@ -10,7 +10,10 @@ class BTreeWordFinder:
         self._tree = BTree()
 
     def main(self):
-        self.append_text("smallText.txt")
+        t0 = clock()
+        self.append_text("largeText.txt")
+        t1 = clock()
+        print "\nInsertion time: %.2fs" % (t1 - t0)
 
         t0 = clock()
         f = open("dictionary.txt", "r")

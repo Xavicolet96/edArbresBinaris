@@ -20,6 +20,9 @@ class Node(object):
             prt = self.parent().get_data()
         return "%6s | (P:%2s)(L:%2s)(R:%2s) | H:%2d B:%2d" % (str(self.__data), prt, lft, rght, self._height, self._balance)
 
+    def __cmp__(self, other):
+        return cmp(self.__data, other.get_data())
+
     """ Binary Tree Functions """
     def set_parent(self, node):
         self._parent = node
@@ -38,6 +41,16 @@ class Node(object):
 
     def set_balance(self, b):
         self._balance = b
+
+    def is_left(self):
+        if not self.parent():
+            return False
+        return self.parent().left() is self
+
+    def is_right(self):
+        if not self.parent():
+            return False
+        return self.parent().right() is self
 
     def remove_child(self, node):
         if self.right() == node:

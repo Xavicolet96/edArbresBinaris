@@ -9,7 +9,6 @@ class BalancedBTree(object):
         return self._root
 
     def insert(self, data):
-        print "inserting", data
         """ Method visible from outside """
         if self._root is None:
             self._root = Node(data)
@@ -19,7 +18,7 @@ class BalancedBTree(object):
 
     def _insert(self, data, node):
         """ The recursive insertion method """
-        if data is node.get_data():
+        if data == node.get_data():
             node.get_data().merge(data)
             return
 
@@ -49,17 +48,18 @@ class BalancedBTree(object):
                 self._insert(data, node.right())
 
     def update_bal(self, node, h=0):
+        """ Runs up the tree updating the balance and height of each node"""
         node.set_height(max(h, node.get_height()))
         bal = 0
         if node.left():
             bal += node.left().get_height()
         else:
-            bal += 1
+            bal -= 1
 
         if node.right():
             bal -= node.right().get_height()
         else:
-            bal -= 1
+            bal += 1
         node.set_balance(bal)
 
         # If the node has a parent, keep going
@@ -67,41 +67,49 @@ class BalancedBTree(object):
             self.update_bal(node.parent(), h + 1)
 
     def balance_tree(self, node):
-        print "\t> balancing %s" % node.get_data()
+        """ Runs up the tree from a given node, checking if any node is imbalanced, if so, rotates it. """
 
         if abs(node.get_balance()) > 1:
-            print "node %s is unbalanced" % node
             if node.get_balance() > 0:
-                self.rotate(node, node.left())
+                self.rotate(node, node.left(), "right")
                 return
             else:
-                self.rotate(node, node.right())
+                self.rotate(node, node.right(), "left")
                 return
 
         if node.parent():
             self.balance_tree(node.parent())
 
-    def contains(self, data):
-        """ Returns the node if data is found, otherwise returns False """
+    def contains(self, word):
+        """ Returns the node if word is found, otherwise returns False """
         probe = self._root
         if probe is None:
             return False
 
         while probe:
-            if data == probe.get_data():
+            if word == probe.get_data().word():
                 return probe
 
-            if data < probe.get_data():
+            if word < probe.get_data().word():
                 probe = probe.left()
                 continue
 
-            if data > probe.get_data():
+            if word > probe.get_data().word():
                 probe = probe.right()
         return False
 
     def print_tree(self):
+        def prt(n):
+            print n
         """ Print the tree following the in_order sequence """
-        self.for_in_order_do(self._root, quick_print)
+        self.for_in_order_do(self._root, prt)
+
+
+    def reset_heights(self):
+        """ Sets thhe height for every node to zero before updating height and balance """
+        def h2zero(n):
+            n.set_height(0)
+        self.for_in_order_do(self._root, h2zero)
 
     def for_in_order_do(self, node, f):
         """ Runs a function on all nodes from node downwards following the in_order sequence"""
@@ -110,49 +118,51 @@ class BalancedBTree(object):
             f(node)
             self.for_in_order_do(node.right(), f)
 
-    def rotate(self, node_e, node_c):
-        """ Rotate two nodes """
-        print "rotating: (%s) by (%s)" % (node_e.get_data(), node_c.get_data())
+    def rotate(self, root, pivot, side):
+        # STEP 0
+        # Connect the rest of the tree to the Pivot node
+        pivot.set_parent(root.parent())
+        if root.parent():
+            if root.is_left():
+                root.parent().set_left(pivot)
+            elif root.is_right():
+                root.parent().set_right(pivot)
 
-        root = None
-        if node_e.parent():
-            root = node_e.parent()
+        # rotate the given side
+        if side is "left":
+            self.rotate_left(root, pivot)
+        elif side is "right":
+            self.rotate_right(root, pivot)
 
-        if node_c is node_e.left():
-            node_e.set_left(None)
-        else:
-            node_e.set_right(None)
-        node_c.set_parent(None)
+        # Check for root pointer redirection
+        if root is self._root:
+            self._root = pivot
 
-        if node_c.left() and node_c.left().get_height() == 0:
-            node_c.left().set_parent(node_e)
-            node_e.set_right(node_c.left())
-            node_c.set_left(None)
-        else:
-            node_c.right().set_parent(node_e)
-            node_e.set_left(node_c.right())
-            node_c.set_right(None)
-
-        # Node arrel
-        node_e.set_parent(node_c)
-        if node_c.left() is None:
-            node_c.set_left(node_e)
-        else:
-            node_c.set_right(node_e)
-
-        # Arreglar Root
-        if root:
-            node_c.set_parent(root)
-            if root.left() is node_e:
-                root.set_left(node_c)
-            else:
-                root.set_right(node_c)
-        if node_e is self._root:
-            self._root = node_c
-
+        # Update the tree balance factors and height afterwards
         self.refresh_tree()
 
+    @staticmethod
+    def rotate_left(root, pivot):
+        # STEP 1
+        root.set_right(pivot.left())
+        if pivot.left():
+            pivot.left().set_parent(root)
+        # STEP 2
+        pivot.set_left(root)
+        root.set_parent(pivot)
+
+    @staticmethod
+    def rotate_right(root, pivot):
+        # STEP 1
+        root.set_left(pivot.right())
+        if pivot.right():
+            pivot.right().set_parent(root)
+        # STEP 2
+        pivot.set_right(root)
+        root.set_parent(pivot)
+
     def refresh_tree(self):
+        self.reset_heights()
         self._refresh_tree(self._root)
 
     def _refresh_tree(self, node):
@@ -167,30 +177,16 @@ class BalancedBTree(object):
     @staticmethod
     def test():
         tree = BalancedBTree()
-        tree.insert("E")
-        tree.insert("C")
+
+        tree.insert("A")
         tree.insert("B")
+        tree.insert("C")
         tree.insert("D")
+        tree.insert("E")
         tree.insert("F")
 
         tree.print_tree()
 
-        print "\n"
-
-        tree.insert("A")
-
-        print "\n"
-
-        tree.print_tree()
-
-        """
-        print "\nFinal tree:"
-        tree.print_tree()
-        """
-
-
-def quick_print(string):
-    print string
 
 if __name__ == "__main__":
     BalancedBTree.test()
